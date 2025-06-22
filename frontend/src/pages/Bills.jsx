@@ -37,10 +37,23 @@ const Bills = () => {
   const [qrValue, setQrValue] = useState('');
   const [companyId, setCompanyId] = useState('');
   const [qrDialog, setQrDialog] = useState({ open: false, bill: null });
+  const [receiverSearch, setReceiverSearch] = useState('');
 
-  const fetchBills = async (searchTerm = '') => {
-    const res = await api.get('/bill');
-    setBills(res.data.filter(b => b.billNumber.toString().includes(searchTerm)));
+  const fetchBills = async () => {
+    try {
+      const res = await api.get('/bill');
+      // Strict descending order: date, then bill number
+      setBills(res.data.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        if (dateA.getTime() === dateB.getTime()) {
+          return (b.billNumber || 0) - (a.billNumber || 0);
+        }
+        return dateB - dateA;
+      }));
+    } catch (error) {
+      setSnackbar({ open: true, message: 'Failed to fetch bills', severity: 'error' });
+    }
   };
   const fetchReceivers = async () => {
     const res = await api.get('/receiver');
@@ -75,21 +88,29 @@ const Bills = () => {
   const handleDelete = async (id) => {
     await api.delete(`/bill/${id}`);
     setSnackbar({ open: true, message: 'Bill deleted', severity: 'success' });
-    fetchBills(search);
+    fetchBills();
   };
 
   const handleProductChange = (idx, field, value) => {
-    const products = [...formik.values.products];
-    products[idx][field] = value;
-    if (field === 'qty' || field === 'rate') {
-      products[idx].amount = (Number(products[idx].qty) || 0) * (Number(products[idx].rate) || 0);
-    }
-    formik.setFieldValue('products', products);
-    recalcTax(products);
+    const newProducts = formik.values.products.map((product, index) => {
+      if (idx !== index) return product;
+      
+      const updatedProduct = { ...product, [field]: value };
+      
+      if (field === 'qty' || field === 'rate') {
+        const qty = field === 'qty' ? Number(value) : Number(product.qty);
+        const rate = field === 'rate' ? Number(value) : Number(product.rate);
+        updatedProduct.amount = qty * rate;
+      }
+      return updatedProduct;
+    });
+
+    formik.setFieldValue('products', newProducts);
+    recalcTax(newProducts);
   };
 
   const handleAddProduct = () => {
-    formik.setFieldValue('products', [...formik.values.products, initialProduct]);
+    formik.setFieldValue('products', [...formik.values.products, { ...initialProduct }]);
   };
   const handleRemoveProduct = (idx) => {
     const products = formik.values.products.filter((_, i) => i !== idx);
@@ -99,12 +120,13 @@ const Bills = () => {
 
   const recalcTax = (products) => {
     const totalBeforeTax = products.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
-    const cgst = totalBeforeTax * 0.09;
-    const sgst = totalBeforeTax * 0.09;
+    const cgst = totalBeforeTax * 0.025;
+    const sgst = totalBeforeTax * 0.025;
     const igst = 0;
-    const roundOff = Math.round(totalBeforeTax + cgst + sgst) - (totalBeforeTax + cgst + sgst);
-    const totalAfterTax = totalBeforeTax + cgst + sgst + roundOff;
-    const totalInWords = numToWords(Math.round(totalAfterTax));
+    const totalWithTax = totalBeforeTax + cgst + sgst;
+    const roundOff = Math.round(totalWithTax) - totalWithTax;
+    const totalAfterTax = Math.round(totalWithTax);
+    const totalInWords = numToWords(totalAfterTax);
     formik.setFieldValue('tax', { cgst, sgst, igst, roundOff, totalBeforeTax, totalAfterTax, totalInWords });
   };
 
@@ -147,7 +169,7 @@ const Bills = () => {
         await api.post('/bill', data);
         setSnackbar({ open: true, message: 'Bill added', severity: 'success' });
       }
-      setTimeout(() => fetchBills(search), 1200); // Wait for PDF generation
+      await fetchBills(); // Always refetch to get populated receiver/company
       handleClose();
     },
     enableReinitialize: true,
@@ -155,8 +177,18 @@ const Bills = () => {
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    fetchBills(e.target.value);
   };
+
+  const filteredBills = bills.filter(b => {
+    const searchTerm = search.toLowerCase();
+    return (
+      b.billNumber.toString().toLowerCase().includes(searchTerm) ||
+      (b.receiver?.name && b.receiver.name.toLowerCase().includes(searchTerm))
+    );
+  });
+
+  // Filter receivers for dropdown
+  const filteredReceivers = receivers.filter(r => r.name.toLowerCase().includes(receiverSearch.toLowerCase()));
 
   return (
     <Layout>
@@ -171,6 +203,14 @@ const Bills = () => {
         InputProps={{ startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment> }}
         sx={{ mb: 2, width: 300 }}
       />
+      {/* <TextField
+        fullWidth
+        margin="normal"
+        label="Search Receiver"
+        value={receiverSearch}
+        onChange={e => setReceiverSearch(e.target.value)}
+        placeholder="Type to search receiver names"
+      /> */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -183,12 +223,12 @@ const Bills = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {bills.map((b) => (
+            {filteredBills.map((b) => (
               <TableRow key={b._id}>
                 <TableCell>{b.billNumber}</TableCell>
                 <TableCell>{b.date?.slice(0, 10)}</TableCell>
                 <TableCell>{b.receiver?.name || ''}</TableCell>
-                <TableCell>{b.tax?.totalAfterTax?.toFixed(2) || ''}</TableCell>
+                <TableCell>{b.tax?.totalAfterTax?.toFixed(2) || (b.products && b.products.reduce((sum, p) => sum + (Number(p.amount) || 0), 0).toFixed(2)) || ''}</TableCell>
                 <TableCell align="right">
                   {b.pdfUrl && typeof b.pdfUrl === 'string' && b.pdfUrl.trim() !== '' && (
                     <>
@@ -196,9 +236,8 @@ const Bills = () => {
                       <IconButton component="a" href={backendBase + b.pdfUrl} download title="Download PDF"><span role="img" aria-label="download">⬇️</span></IconButton>
                     </>
                   )}
-                  {b.qrCode && <IconButton onClick={() => setQrDialog({ open: true, bill: b })} title="Show QR"><QrCodeIcon /></IconButton>}
                   <IconButton onClick={() => handleOpen(b)} title="Edit"><EditIcon /></IconButton>
-                  <IconButton onClick={() => handleDelete(b._id)} color="error" title="Delete"><DeleteIcon /></IconButton>
+                  <IconButton onClick={() => handleDelete(b._id)} title="Delete"><DeleteIcon /></IconButton>
                 </TableCell>
               </TableRow>
             ))}
@@ -254,7 +293,7 @@ const Bills = () => {
               </Grid>
               <Grid>
                 <TextField select fullWidth margin="normal" label="Receiver" name="receiver" value={formik.values.receiver} onChange={formik.handleChange} error={formik.touched.receiver && Boolean(formik.errors.receiver)} helperText={formik.touched.receiver && formik.errors.receiver} >
-                  {receivers.map((r) => <MenuItem key={r._id} value={r._id}>{r.name}</MenuItem>)}
+                  {filteredReceivers.map((r) => <MenuItem key={r._id} value={r._id}>{r.name}</MenuItem>)}
                 </TextField>
               </Grid>
             </Grid>
