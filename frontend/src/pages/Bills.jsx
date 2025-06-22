@@ -74,7 +74,15 @@ const Bills = () => {
     if (bill) {
       setEditId(bill._id);
       formik.setValues({ ...bill, receiver: bill.receiver?._id || bill.receiver });
-      setQrValue(bill.qrCode || '');
+      // Generate a compact QR value with only essential info
+      const qrData = JSON.stringify({
+        billNumber: bill.billNumber,
+        date: bill.date,
+        receiver: bill.receiver?.name || '',
+        products: bill.products?.map(p => p.description).join(', '),
+        total: bill.tax?.totalAfterTax
+      });
+      setQrValue(qrData);
       recalcTax(bill.products);
     } else {
       setEditId(null);
@@ -161,7 +169,15 @@ const Bills = () => {
       ),
     }),
     onSubmit: async (values) => {
-      const data = { ...values, qrCode: JSON.stringify(values), pdfUrl: '', company: companyId };
+      // Generate a compact QR value for backend as well
+      const qrData = JSON.stringify({
+        billNumber: values.billNumber,
+        date: values.date,
+        receiver: receivers.find(r => r._id === values.receiver)?.name || '',
+        products: values.products?.map(p => p.description).join(', '),
+        total: formik.values.tax.totalAfterTax
+      });
+      const data = { ...values, qrCode: qrData, pdfUrl: '', company: companyId };
       if (editId) {
         await api.put(`/bill/${editId}`, data);
         setSnackbar({ open: true, message: 'Bill updated', severity: 'success' });

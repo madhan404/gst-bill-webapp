@@ -71,7 +71,20 @@ The backend runs on `http://localhost:5000` and the frontend on `http://localhos
 
 ## 🖼️ Screenshots
 
-> _Add screenshots here to showcase your app!_
+### Login Page
+![Login Page](frontend/src/assets/login-page.png)
+
+### Bill Preview
+![Bill Preview](frontend/src/assets/bill-preview.png)
+
+### Receiver Details
+![Receiver Details](frontend/src/assets/receiver-details.png)
+
+### Company Profile
+![Company Profile](frontend/src/assets/Company-Profile.png)
+
+### Analytics
+![Analytics](frontend/src/assets/analytics.png)
 
 ---
 
