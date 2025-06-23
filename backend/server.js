@@ -14,7 +14,10 @@ const path = require('path');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://6859567b717bf20009f475c5--mellow-moxie-829df5.netlify.app", // or "*" for open
+  credentials: true
+}));
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
