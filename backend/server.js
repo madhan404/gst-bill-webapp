@@ -14,9 +14,19 @@ const path = require('path');
 dotenv.config();
 
 const app = express();
+// app.use(cors({
+//   origin: "https://6859567b717bf20009f475c5--mellow-moxie-829df5.netlify.app", // or "*" for open
+//   credentials: true
+// }));
 app.use(cors({
-  origin: "https://6859567b717bf20009f475c5--mellow-moxie-829df5.netlify.app", // or "*" for open
-  credentials: true
+  origin: [
+    'http://localhost:5173',
+    'https://6859567b717bf20009f475c5--mellow-moxie-829df5.netlify.app',
+    'https://685972c55838190008a01c5a--mellow-moxie-829df5.netlify.app', // add your new deploy preview
+    // or use a wildcard for all Netlify previews:
+    // /^https:\\/\\/[a-z0-9-]+--mellow-moxie-829df5\\.netlify\\.app$/
+  ],
+  credentials: true,
 }));
 app.use(express.json());
 
