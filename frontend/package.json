@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:note": "Remember to set VITE_API_URL in your Netlify/production environment to https://gst-bill-backend-7sp5.onrender.com"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
