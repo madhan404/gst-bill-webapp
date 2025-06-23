@@ -24,7 +24,7 @@ const initialForm = {
   tax: { cgst: 0, sgst: 0, igst: 0, roundOff: 0, totalBeforeTax: 0, totalAfterTax: 0, totalInWords: '', cgstRate: 2.5, sgstRate: 2.5 },
 };
 
-const backendBase = 'http://localhost:3000';
+const backendBase = 'https://gst-bill-backend-7sp5.onrender.com';
 
 const Bills = () => {
   const [bills, setBills] = useState([]);
