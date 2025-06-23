@@ -25,29 +25,29 @@ const Dashboard = () => {
 
   return (
   <Layout>
-    <Typography variant="h4" mb={3}>Welcome to GST Bill App</Typography>
+    <Typography variant="h4" mb={3} sx={{ fontSize: { xs: 22, sm: 28 } }}>Welcome to GST Bill App</Typography>
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="40vh"><CircularProgress /></Box>
       ) : error ? (
         <Alert severity="error">{error}</Alert>
       ) : (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={4}>
-        <Paper sx={{ p: 3, textAlign: 'center' }}>
-          <Typography variant="h6">Total Bills</Typography>
-              <Typography variant="h3">{summary?.totalBills ?? '-'}</Typography>
+    <Grid container spacing={2}>
+      <Grid item xs={12} sm={6} md={4}>
+        <Paper sx={{ p: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+          <Typography variant="h6" sx={{ fontSize: { xs: 16, sm: 18 } }}>Total Bills</Typography>
+              <Typography variant="h3" sx={{ fontSize: { xs: 28, sm: 36 } }}>{summary?.totalBills ?? '-'}</Typography>
         </Paper>
       </Grid>
-      <Grid item xs={12} md={4}>
-        <Paper sx={{ p: 3, textAlign: 'center' }}>
-          <Typography variant="h6">Total Amount</Typography>
-              <Typography variant="h3">{summary?.totalAmount?.toFixed(2) ?? '-'}</Typography>
+      <Grid item xs={12} sm={6} md={4}>
+        <Paper sx={{ p: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+          <Typography variant="h6" sx={{ fontSize: { xs: 16, sm: 18 } }}>Total Amount</Typography>
+              <Typography variant="h3" sx={{ fontSize: { xs: 28, sm: 36 } }}>{summary?.totalAmount?.toFixed(2) ?? '-'}</Typography>
         </Paper>
       </Grid>
-      <Grid item xs={12} md={4}>
-        <Paper sx={{ p: 3, textAlign: 'center' }}>
-          <Typography variant="h6">Total Tax</Typography>
-              <Typography variant="h3">{summary?.totalTax?.toFixed(2) ?? '-'}</Typography>
+      <Grid item xs={12} sm={6} md={4}>
+        <Paper sx={{ p: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+          <Typography variant="h6" sx={{ fontSize: { xs: 16, sm: 18 } }}>Total Tax</Typography>
+              <Typography variant="h3" sx={{ fontSize: { xs: 28, sm: 36 } }}>{summary?.totalTax?.toFixed(2) ?? '-'}</Typography>
         </Paper>
       </Grid>
     </Grid>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar, Alert, InputAdornment
+  Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar, Alert, InputAdornment, Grid
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -82,19 +82,20 @@ const Receivers = () => {
 
   return (
     <Layout>
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h5">Receivers</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpen()}>Add Receiver</Button>
+      <Box display="flex" alignItems={{ xs: 'stretch', sm: 'center' }} flexDirection={{ xs: 'column', sm: 'row' }} justifyContent="space-between" mb={2} gap={2}>
+        <Typography variant="h5" sx={{ fontSize: { xs: 18, sm: 22 } }}>Receivers</Typography>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpen()} sx={{ width: { xs: '100%', sm: 'auto' } }}>Add Receiver</Button>
       </Box>
       <TextField
         placeholder="Search by name"
         value={search}
         onChange={handleSearch}
         InputProps={{ startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment> }}
-        sx={{ mb: 2, width: 300 }}
+        sx={{ mb: 2, width: { xs: '100%', sm: 300 } }}
+        size="small"
       />
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'auto' }}>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
@@ -126,11 +127,23 @@ const Receivers = () => {
         <DialogTitle>{editId ? 'Edit Receiver' : 'Add Receiver'}</DialogTitle>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
-            <TextField fullWidth margin="normal" label="Name" name="name" value={formik.values.name} onChange={formik.handleChange} error={formik.touched.name && Boolean(formik.errors.name)} helperText={formik.touched.name && formik.errors.name} />
-            <TextField fullWidth margin="normal" label="Address" name="address" value={formik.values.address} onChange={formik.handleChange} error={formik.touched.address && Boolean(formik.errors.address)} helperText={formik.touched.address && formik.errors.address} />
-            <TextField fullWidth margin="normal" label="Phone" name="phone" value={formik.values.phone} onChange={formik.handleChange} error={formik.touched.phone && Boolean(formik.errors.phone)} helperText={formik.touched.phone && formik.errors.phone} />
-            <TextField fullWidth margin="normal" label="Email" name="email" value={formik.values.email} onChange={formik.handleChange} error={formik.touched.email && Boolean(formik.errors.email)} helperText={formik.touched.email && formik.errors.email} />
-            <TextField fullWidth margin="normal" label="GST Number" name="gstNumber" value={formik.values.gstNumber} onChange={formik.handleChange} error={formik.touched.gstNumber && Boolean(formik.errors.gstNumber)} helperText={formik.touched.gstNumber && formik.errors.gstNumber} />
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField fullWidth margin="normal" label="Name" name="name" value={formik.values.name} onChange={formik.handleChange} error={formik.touched.name && Boolean(formik.errors.name)} helperText={formik.touched.name && formik.errors.name} size="small" />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField fullWidth margin="normal" label="Address" name="address" value={formik.values.address} onChange={formik.handleChange} error={formik.touched.address && Boolean(formik.errors.address)} helperText={formik.touched.address && formik.errors.address} size="small" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField fullWidth margin="normal" label="Phone" name="phone" value={formik.values.phone} onChange={formik.handleChange} error={formik.touched.phone && Boolean(formik.errors.phone)} helperText={formik.touched.phone && formik.errors.phone} size="small" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField fullWidth margin="normal" label="Email" name="email" value={formik.values.email} onChange={formik.handleChange} error={formik.touched.email && Boolean(formik.errors.email)} helperText={formik.touched.email && formik.errors.email} size="small" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField fullWidth margin="normal" label="GST Number" name="gstNumber" value={formik.values.gstNumber} onChange={formik.handleChange} error={formik.touched.gstNumber && Boolean(formik.errors.gstNumber)} helperText={formik.touched.gstNumber && formik.errors.gstNumber} size="small" />
+              </Grid>
+            </Grid>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>

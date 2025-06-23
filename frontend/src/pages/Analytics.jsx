@@ -23,43 +23,45 @@ const Analytics = () => {
 
   return (
     <Layout>
-      <Typography variant="h5" mb={2}>Analytics</Typography>
+      <Typography variant="h5" mb={2} sx={{ fontSize: { xs: 18, sm: 22 } }}>Analytics</Typography>
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="40vh"><CircularProgress /></Box>
       ) : (
         <>
-          <Grid container spacing={3} mb={3}>
-            <Grid item xs={12} md={4}>
-              <Paper sx={{ p: 3, textAlign: 'center' }}>
-                <Typography variant="h6">Total Bills</Typography>
-                <Typography variant="h3">{summary?.totalBills}</Typography>
+          <Grid container spacing={2} mb={3}>
+            <Grid item xs={12} sm={6} md={4}>
+              <Paper sx={{ p: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+                <Typography variant="h6" sx={{ fontSize: { xs: 16, sm: 18 } }}>Total Bills</Typography>
+                <Typography variant="h3" sx={{ fontSize: { xs: 28, sm: 36 } }}>{summary?.totalBills}</Typography>
               </Paper>
             </Grid>
-            <Grid item xs={12} md={4}>
-              <Paper sx={{ p: 3, textAlign: 'center' }}>
-                <Typography variant="h6">Total Amount</Typography>
-                <Typography variant="h3">{summary?.totalAmount?.toFixed(2)}</Typography>
+            <Grid item xs={12} sm={6} md={4}>
+              <Paper sx={{ p: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+                <Typography variant="h6" sx={{ fontSize: { xs: 16, sm: 18 } }}>Total Amount</Typography>
+                <Typography variant="h3" sx={{ fontSize: { xs: 28, sm: 36 } }}>{summary?.totalAmount?.toFixed(2)}</Typography>
               </Paper>
             </Grid>
-            <Grid item xs={12} md={4}>
-              <Paper sx={{ p: 3, textAlign: 'center' }}>
-                <Typography variant="h6">Total Tax</Typography>
-                <Typography variant="h3">{summary?.totalTax?.toFixed(2)}</Typography>
+            <Grid item xs={12} sm={6} md={4}>
+              <Paper sx={{ p: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+                <Typography variant="h6" sx={{ fontSize: { xs: 16, sm: 18 } }}>Total Tax</Typography>
+                <Typography variant="h3" sx={{ fontSize: { xs: 28, sm: 36 } }}>{summary?.totalTax?.toFixed(2)}</Typography>
               </Paper>
             </Grid>
           </Grid>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" mb={2}>Monthly Report</Typography>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={monthly} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="total" fill="#1976d2" name="Total Amount" />
-                <Bar dataKey="count" fill="#90caf9" name="Bill Count" />
-              </BarChart>
-            </ResponsiveContainer>
+          <Paper sx={{ p: { xs: 2, sm: 3 } }}>
+            <Typography variant="h6" mb={2} sx={{ fontSize: { xs: 16, sm: 18 } }}>Monthly Report</Typography>
+            <Box sx={{ width: '100%', height: { xs: 220, sm: 300 } }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={monthly} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="total" fill="#1976d2" name="Total Amount" />
+                  <Bar dataKey="count" fill="#90caf9" name="Bill Count" />
+                </BarChart>
+              </ResponsiveContainer>
+            </Box>
           </Paper>
         </>
       )}

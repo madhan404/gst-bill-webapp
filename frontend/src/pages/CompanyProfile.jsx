@@ -83,50 +83,50 @@ const CompanyProfile = () => {
 
   return (
     <Layout>
-      <Typography variant="h5" mb={2}>Company Profile</Typography>
-      <Paper sx={{ p: 3, maxWidth: 700 }}>
+      <Typography variant="h5" mb={2} sx={{ fontSize: { xs: 18, sm: 22 } }}>Company Profile</Typography>
+      <Paper sx={{ p: { xs: 2, sm: 3 }, maxWidth: { xs: '98vw', sm: 700 }, mx: 'auto' }}>
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={2}>
-            <Grid>
-              <TextField fullWidth label="Company Name" name="companyName" value={formik.values.companyName} onChange={formik.handleChange} error={formik.touched.companyName && Boolean(formik.errors.companyName)} helperText={formik.touched.companyName && formik.errors.companyName} />
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Company Name" name="companyName" value={formik.values.companyName} onChange={formik.handleChange} error={formik.touched.companyName && Boolean(formik.errors.companyName)} helperText={formik.touched.companyName && formik.errors.companyName} size="small" />
             </Grid>
-            <Grid>
-              <TextField fullWidth label="GST Number" name="gstNumber" value={formik.values.gstNumber} onChange={formik.handleChange} error={formik.touched.gstNumber && Boolean(formik.errors.gstNumber)} helperText={formik.touched.gstNumber && formik.errors.gstNumber} />
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="GST Number" name="gstNumber" value={formik.values.gstNumber} onChange={formik.handleChange} error={formik.touched.gstNumber && Boolean(formik.errors.gstNumber)} helperText={formik.touched.gstNumber && formik.errors.gstNumber} size="small" />
             </Grid>
-            <Grid>
-              <TextField fullWidth label="Address" name="address" value={formik.values.address} onChange={formik.handleChange} error={formik.touched.address && Boolean(formik.errors.address)} helperText={formik.touched.address && formik.errors.address} />
+            <Grid item xs={12}>
+              <TextField fullWidth label="Address" name="address" value={formik.values.address} onChange={formik.handleChange} error={formik.touched.address && Boolean(formik.errors.address)} helperText={formik.touched.address && formik.errors.address} size="small" />
             </Grid>
-            <Grid>
-              <TextField fullWidth label="Phone" name="phone" value={formik.values.phone} onChange={formik.handleChange} error={formik.touched.phone && Boolean(formik.errors.phone)} helperText={formik.touched.phone && formik.errors.phone} />
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Phone" name="phone" value={formik.values.phone} onChange={formik.handleChange} error={formik.touched.phone && Boolean(formik.errors.phone)} helperText={formik.touched.phone && formik.errors.phone} size="small" />
             </Grid>
-            <Grid>
-              <TextField fullWidth label="Proprietor Name" name="proprietorName" value={formik.values.proprietorName} onChange={formik.handleChange} error={formik.touched.proprietorName && Boolean(formik.errors.proprietorName)} helperText={formik.touched.proprietorName && formik.errors.proprietorName} />
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Proprietor Name" name="proprietorName" value={formik.values.proprietorName} onChange={formik.handleChange} error={formik.touched.proprietorName && Boolean(formik.errors.proprietorName)} helperText={formik.touched.proprietorName && formik.errors.proprietorName} size="small" />
             </Grid>
-            <Grid>
-              <TextField fullWidth label="Email" name="email" value={formik.values.email} onChange={formik.handleChange} error={formik.touched.email && Boolean(formik.errors.email)} helperText={formik.touched.email && formik.errors.email} />
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Email" name="email" value={formik.values.email} onChange={formik.handleChange} error={formik.touched.email && Boolean(formik.errors.email)} helperText={formik.touched.email && formik.errors.email} size="small" />
             </Grid>
-            <Grid>
+            <Grid item xs={12} sm={6}>
               <Button variant="outlined" component="label" fullWidth sx={{ height: 56 }}>
                 Upload Logo
                 <input type="file" accept="image/*" hidden onChange={handleLogoChange} />
               </Button>
               {logoPreview && <Avatar src={logoPreview} alt="Logo" sx={{ width: 56, height: 56, mt: 1 }} />}
             </Grid>
-            <Grid>
-              <TextField fullWidth label="Bank Name" name="bankName" value={formik.values.bankName} onChange={formik.handleChange} error={formik.touched.bankName && Boolean(formik.errors.bankName)} helperText={formik.touched.bankName && formik.errors.bankName} />
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Bank Name" name="bankName" value={formik.values.bankName} onChange={formik.handleChange} error={formik.touched.bankName && Boolean(formik.errors.bankName)} helperText={formik.touched.bankName && formik.errors.bankName} size="small" />
             </Grid>
-            <Grid>
-              <TextField fullWidth label="Account Number" name="accountNumber" value={formik.values.accountNumber} onChange={formik.handleChange} error={formik.touched.accountNumber && Boolean(formik.errors.accountNumber)} helperText={formik.touched.accountNumber && formik.errors.accountNumber} />
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Account Number" name="accountNumber" value={formik.values.accountNumber} onChange={formik.handleChange} error={formik.touched.accountNumber && Boolean(formik.errors.accountNumber)} helperText={formik.touched.accountNumber && formik.errors.accountNumber} size="small" />
             </Grid>
-            <Grid>
-              <TextField fullWidth label="IFSC" name="ifsc" value={formik.values.ifsc} onChange={formik.handleChange} error={formik.touched.ifsc && Boolean(formik.errors.ifsc)} helperText={formik.touched.ifsc && formik.errors.ifsc} />
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="IFSC" name="ifsc" value={formik.values.ifsc} onChange={formik.handleChange} error={formik.touched.ifsc && Boolean(formik.errors.ifsc)} helperText={formik.touched.ifsc && formik.errors.ifsc} size="small" />
             </Grid>
-            <Grid>
-              <TextField fullWidth label="Branch" name="branch" value={formik.values.branch} onChange={formik.handleChange} error={formik.touched.branch && Boolean(formik.errors.branch)} helperText={formik.touched.branch && formik.errors.branch} />
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Branch" name="branch" value={formik.values.branch} onChange={formik.handleChange} error={formik.touched.branch && Boolean(formik.errors.branch)} helperText={formik.touched.branch && formik.errors.branch} size="small" />
             </Grid>
-            <Grid>
+            <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
                 Save
               </Button>

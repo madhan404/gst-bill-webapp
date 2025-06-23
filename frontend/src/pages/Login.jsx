@@ -32,13 +32,13 @@ const Login = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #191970 60%, #223366 100%)' }}>
-      <Box sx={{ width: 370, bgcolor: 'white', p: 4, borderRadius: 3, boxShadow: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', mx: 'auto' }}>
-        <img src={lionLogo} alt="Government Logo" style={{ width: 70, marginBottom: 12 }} />
+      <Box sx={{ width: { xs: '95vw', sm: 370 }, maxWidth: 400, bgcolor: 'white', p: { xs: 2, sm: 4 }, borderRadius: 3, boxShadow: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', mx: 'auto' }}>
+        <img src={lionLogo} alt="Government Logo" style={{ width: 60, maxWidth: '20vw', marginBottom: 12 }} />
         <Box sx={{ textAlign: 'center', mb: 2 }}>
-          <span style={{ fontWeight: 700, fontSize: 22, color: '#191970', letterSpacing: 1 }}>GST Bill Web App</span>
-          <div style={{ fontSize: 13, color: '#555', fontWeight: 500 }}>Government of India</div>
+          <span style={{ fontWeight: 700, fontSize: 20, color: '#191970', letterSpacing: 1 }}>GST Bill Web App</span>
+          <div style={{ fontSize: 12, color: '#555', fontWeight: 500 }}>Government of India</div>
         </Box>
-        <Typography variant="h5" mb={2} sx={{ color: '#191970', fontWeight: 600 }}>Login</Typography>
+        <Typography variant="h5" mb={2} sx={{ color: '#191970', fontWeight: 600, fontSize: { xs: 20, sm: 24 } }}>Login</Typography>
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         <form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
           <TextField
@@ -50,6 +50,7 @@ const Login = () => {
             onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
+            size="small"
           />
           <TextField
             fullWidth
@@ -61,12 +62,13 @@ const Login = () => {
             onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
+            size="small"
           />
           <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2, bgcolor: '#191970', fontWeight: 600, fontSize: 16 }}>
             Login
           </Button>
         </form>
-        <Button onClick={() => navigate('/register')} sx={{ mt: 2 }} fullWidth>
+        <Button onClick={() => navigate('/register')} sx={{ mt: 2, fontSize: { xs: 13, sm: 16 } }} fullWidth>
           Don't have an account? Register
         </Button>
       </Box>

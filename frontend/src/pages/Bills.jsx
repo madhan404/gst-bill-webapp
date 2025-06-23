@@ -211,27 +211,20 @@ const Bills = () => {
 
   return (
     <Layout>
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h5">Bills</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpen()}>Add Bill</Button>
+      <Box display="flex" alignItems={{ xs: 'stretch', sm: 'center' }} flexDirection={{ xs: 'column', sm: 'row' }} justifyContent="space-between" mb={2} gap={2}>
+        <Typography variant="h5" sx={{ fontSize: { xs: 18, sm: 22 } }}>Bills</Typography>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpen()} sx={{ width: { xs: '100%', sm: 'auto' } }}>Add Bill</Button>
       </Box>
       <TextField
         placeholder="Search by bill number"
         value={search}
         onChange={handleSearch}
         InputProps={{ startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment> }}
-        sx={{ mb: 2, width: 300 }}
+        sx={{ mb: 2, width: { xs: '100%', sm: 300 } }}
+        size="small"
       />
-      {/* <TextField
-        fullWidth
-        margin="normal"
-        label="Search Receiver"
-        value={receiverSearch}
-        onChange={e => setReceiverSearch(e.target.value)}
-        placeholder="Type to search receiver names"
-      /> */}
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'auto' }}>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell>Bill Number</TableCell>
@@ -278,9 +271,9 @@ const Bills = () => {
                 <Typography>Date: {qrDialog.bill.date?.slice(0, 10)}</Typography>
                 <Typography>Receiver: {qrDialog.bill.receiver?.name || ''}</Typography>
                 <Typography>Products:</Typography>
-                <ul>
+                <ul style={{ paddingLeft: 18 }}>
                   {qrDialog.bill.products.map((p, i) => (
-                    <li key={i}>{p.description} (HSN: {p.hsnCode}) - Qty: {p.qty}, Rate: {p.rate}, Amount: {p.amount}</li>
+                    <li key={i} style={{ fontSize: 14 }}>{p.description} (HSN: {p.hsnCode}) - Qty: {p.qty}, Rate: {p.rate}, Amount: {p.amount}</li>
                   ))}
                 </ul>
                 <Typography>CGST: {qrDialog.bill.tax?.cgst?.toFixed(2)}</Typography>
@@ -302,24 +295,24 @@ const Bills = () => {
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
         <DialogTitle>{editId ? 'Edit Bill' : 'Add Bill'}</DialogTitle>
         <form onSubmit={formik.handleSubmit}>
-          <DialogContent>
+          <DialogContent sx={{ p: { xs: 1, sm: 3 } }}>
             <Grid container spacing={2}>
-              <Grid>
-                <TextField fullWidth margin="normal" label="Bill Number" name="billNumber" value={formik.values.billNumber} onChange={formik.handleChange} error={formik.touched.billNumber && Boolean(formik.errors.billNumber)} helperText={formik.touched.billNumber && formik.errors.billNumber} />
+              <Grid item xs={12} sm={4}>
+                <TextField fullWidth margin="normal" label="Bill Number" name="billNumber" value={formik.values.billNumber} onChange={formik.handleChange} error={formik.touched.billNumber && Boolean(formik.errors.billNumber)} helperText={formik.touched.billNumber && formik.errors.billNumber} size="small" />
               </Grid>
-              <Grid>
-                <TextField fullWidth margin="normal" label="Date" name="date" type="date" value={formik.values.date ? formik.values.date.slice(0, 10) : ''} onChange={formik.handleChange} error={formik.touched.date && Boolean(formik.errors.date)} helperText={formik.touched.date && formik.errors.date} InputLabelProps={{ shrink: true }} />
+              <Grid item xs={12} sm={4}>
+                <TextField fullWidth margin="normal" label="Date" name="date" type="date" value={formik.values.date ? formik.values.date.slice(0, 10) : ''} onChange={formik.handleChange} error={formik.touched.date && Boolean(formik.errors.date)} helperText={formik.touched.date && formik.errors.date} InputLabelProps={{ shrink: true }} size="small" />
               </Grid>
-              <Grid>
-                <TextField select fullWidth margin="normal" label="Receiver" name="receiver" value={formik.values.receiver} onChange={formik.handleChange} error={formik.touched.receiver && Boolean(formik.errors.receiver)} helperText={formik.touched.receiver && formik.errors.receiver} >
+              <Grid item xs={12} sm={4}>
+                <TextField select fullWidth margin="normal" label="Receiver" name="receiver" value={formik.values.receiver} onChange={formik.handleChange} error={formik.touched.receiver && Boolean(formik.errors.receiver)} helperText={formik.touched.receiver && formik.errors.receiver} size="small" >
                   {filteredReceivers.map((r) => <MenuItem key={r._id} value={r._id}>{r.name}</MenuItem>)}
                 </TextField>
               </Grid>
             </Grid>
-            <Typography variant="subtitle1" mt={2}>Products</Typography>
+            <Typography variant="subtitle1" mt={2} sx={{ fontSize: { xs: 15, sm: 17 } }}>Products</Typography>
             {formik.values.products.map((p, idx) => (
               <Grid container spacing={1} key={idx} alignItems="center">
-                <Grid>
+                <Grid item xs={12} sm={3}>
                   <TextField
                     fullWidth
                     label="Description"
@@ -330,9 +323,10 @@ const Bills = () => {
                     error={formik.touched.products?.[idx]?.description && Boolean(formik.errors.products?.[idx]?.description)}
                     helperText={formik.touched.products?.[idx]?.description && formik.errors.products?.[idx]?.description}
                     autoComplete="off"
+                    size="small"
                   />
                 </Grid>
-                <Grid>
+                <Grid item xs={6} sm={2}>
                   <TextField
                     fullWidth
                     label="HSN Code"
@@ -340,9 +334,10 @@ const Bills = () => {
                     value={p.hsnCode}
                     onChange={e => handleProductChange(idx, 'hsnCode', e.target.value)}
                     autoComplete="off"
+                    size="small"
                   />
                 </Grid>
-                <Grid>
+                <Grid item xs={6} sm={2}>
                   <TextField
                     fullWidth
                     label="Qty"
@@ -352,9 +347,10 @@ const Bills = () => {
                     onChange={e => handleProductChange(idx, 'qty', e.target.value)}
                     error={formik.touched.products?.[idx]?.qty && Boolean(formik.errors.products?.[idx]?.qty)}
                     helperText={formik.touched.products?.[idx]?.qty && formik.errors.products?.[idx]?.qty}
+                    size="small"
                   />
                 </Grid>
-                <Grid>
+                <Grid item xs={6} sm={2}>
                   <TextField
                     fullWidth
                     label="Rate"
@@ -364,25 +360,27 @@ const Bills = () => {
                     onChange={e => handleProductChange(idx, 'rate', e.target.value)}
                     error={formik.touched.products?.[idx]?.rate && Boolean(formik.errors.products?.[idx]?.rate)}
                     helperText={formik.touched.products?.[idx]?.rate && formik.errors.products?.[idx]?.rate}
+                    size="small"
                   />
                 </Grid>
-                <Grid>
+                <Grid item xs={6} sm={2}>
                   <TextField
                     fullWidth
                     label="Amount"
                     name={`products[${idx}].amount`}
                     value={p.amount}
                     InputProps={{ readOnly: true }}
+                    size="small"
                   />
                 </Grid>
-                <Grid>
-                  <Button color="error" onClick={() => handleRemoveProduct(idx)} disabled={formik.values.products.length === 1}>Remove</Button>
+                <Grid item xs={12} sm={1}>
+                  <Button color="error" onClick={() => handleRemoveProduct(idx)} disabled={formik.values.products.length === 1} sx={{ minWidth: 0, fontSize: 12 }}>Remove</Button>
                 </Grid>
               </Grid>
             ))}
-            <Button onClick={handleAddProduct} sx={{ mt: 1 }}>Add Product</Button>
-            <Box mt={2} sx={{ border: '1px solid #ddd', p: 2, borderRadius: 1 }}>
-              <Typography variant="h6" mb={1}>Tax Calculation</Typography>
+            <Button onClick={handleAddProduct} sx={{ mt: 1, fontSize: { xs: 13, sm: 15 } }}>Add Product</Button>
+            <Box mt={2} sx={{ border: '1px solid #ddd', p: { xs: 1, sm: 2 }, borderRadius: 1 }}>
+              <Typography variant="h6" mb={1} sx={{ fontSize: { xs: 15, sm: 17 } }}>Tax Calculation</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={6} sm={3}>
                   <TextField
@@ -392,6 +390,7 @@ const Bills = () => {
                     type="number"
                     value={formik.values.tax.cgstRate}
                     onChange={formik.handleChange}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={6} sm={3}>
@@ -402,20 +401,21 @@ const Bills = () => {
                     type="number"
                     value={formik.values.tax.sgstRate}
                     onChange={formik.handleChange}
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Typography>CGST: {formik.values.tax.cgst.toFixed(2)}</Typography>
-                  <Typography>SGST: {formik.values.tax.sgst.toFixed(2)}</Typography>
-                  <Typography>Total Before Tax: {formik.values.tax.totalBeforeTax.toFixed(2)}</Typography>
-                  <Typography variant="h6">Total After Tax: {formik.values.tax.totalAfterTax.toFixed(2)}</Typography>
+                  <Typography sx={{ fontSize: { xs: 14, sm: 16 } }}>CGST: {formik.values.tax.cgst.toFixed(2)}</Typography>
+                  <Typography sx={{ fontSize: { xs: 14, sm: 16 } }}>SGST: {formik.values.tax.sgst.toFixed(2)}</Typography>
+                  <Typography sx={{ fontSize: { xs: 14, sm: 16 } }}>Total Before Tax: {formik.values.tax.totalBeforeTax.toFixed(2)}</Typography>
+                  <Typography variant="h6" sx={{ fontSize: { xs: 15, sm: 17 } }}>Total After Tax: {formik.values.tax.totalAfterTax.toFixed(2)}</Typography>
                 </Grid>
               </Grid>
-              <Typography sx={{mt:1}}>Total in Words: {formik.values.tax.totalInWords}</Typography>
+              <Typography sx={{ mt: 1, fontSize: { xs: 13, sm: 15 } }}>Total in Words: {formik.values.tax.totalInWords}</Typography>
             </Box>
             {qrValue && (
               <Box mt={2} textAlign="center">
-                <Typography variant="subtitle2">Bill QR Code</Typography>
+                <Typography variant="subtitle2" sx={{ fontSize: { xs: 13, sm: 15 } }}>Bill QR Code</Typography>
                 <Suspense fallback={<div>Loading QR...</div>}>
                   <QRCode value={qrValue} size={128} />
                 </Suspense>
