@@ -15,8 +15,18 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-  origin: "https://6859567b717bf20009f475c5--mellow-moxie-829df5.netlify.app", // or "*" for open
-  credentials: true
+  origin: (origin, callback) => {
+    if (
+      !origin ||
+      origin === 'http://localhost:5173' ||
+      /^https:\/\/[a-z0-9-]+--mellow-moxie-829df5\.netlify\.app$/.test(origin)
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
 }));
 app.use(express.json());
 

@@ -22,7 +22,7 @@ const Register = () => {
     onSubmit: async (values) => {
       setError('');
       try {
-        const res = await api.post('/auth/register', values);
+        const res = await api.post('/api/auth/register', values);
         setToken(res.data.token);
         setUser(res.data.user);
         navigate('/dashboard');

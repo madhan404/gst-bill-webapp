@@ -20,7 +20,7 @@ const Login = () => {
     onSubmit: async (values) => {
       setError('');
       try {
-        const res = await api.post('/auth/login', values);
+        const res = await api.post('/api/auth/login', values);
         setToken(res.data.token);
         setUser(res.data.user);
         navigate('/dashboard');
