@@ -41,7 +41,7 @@ const Bills = () => {
 
   const fetchBills = async () => {
     try {
-      const res = await api.get('/bill');
+      const res = await api.get('/api/bill');
       // Strict descending order: date, then bill number
       setBills(res.data.sort((a, b) => {
         const dateA = new Date(a.date);
@@ -56,15 +56,15 @@ const Bills = () => {
     }
   };
   const fetchReceivers = async () => {
-    const res = await api.get('/receiver');
+    const res = await api.get('/api/receiver');
     setReceivers(res.data);
   };
   const fetchProductSuggestions = async (search = '') => {
-    const res = await api.get('/product', { params: { search } });
+    const res = await api.get('/api/product', { params: { search } });
     setProductSuggestions(res.data);
   };
   const fetchCompany = async () => {
-    const res = await api.get('/company');
+    const res = await api.get('/api/company');
     if (res.data && res.data._id) setCompanyId(res.data._id);
   };
 

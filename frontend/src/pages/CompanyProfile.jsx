@@ -43,7 +43,7 @@ const CompanyProfile = () => {
       setError('');
       setSuccess('');
       try {
-        await api.post('/company', values);
+        await api.post('/api/company', values);
         setSuccess('Profile updated');
       } catch (err) {
         setError(err.response?.data?.message || 'Update failed');
@@ -55,7 +55,7 @@ const CompanyProfile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await api.get('/company');
+        const res = await api.get('/api/company');
         if (res.data) {
           formik.setValues(res.data);
           setLogoPreview(res.data.logo);

@@ -13,7 +13,7 @@ const Dashboard = () => {
       setLoading(true);
       setError('');
       try {
-        const res = await api.get('/analytics/summary');
+        const res = await api.get('/api/analytics/summary');
         setSummary(res.data);
       } catch (err) {
         setError('Failed to load dashboard data');

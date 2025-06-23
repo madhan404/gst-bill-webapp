@@ -28,7 +28,7 @@ const Receivers = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const fetchReceivers = async (searchTerm = '') => {
-    const res = await api.get('/receiver', { params: { search: searchTerm } });
+    const res = await api.get('/api/receiver', { params: { search: searchTerm } });
     setReceivers(res.data);
   };
 
@@ -47,7 +47,7 @@ const Receivers = () => {
   const handleClose = () => setOpen(false);
 
   const handleDelete = async (id) => {
-    await api.delete(`/receiver/${id}`);
+    await api.delete(`/api/receiver/${id}`);
     setSnackbar({ open: true, message: 'Receiver deleted', severity: 'success' });
     fetchReceivers(search);
   };
@@ -63,10 +63,10 @@ const Receivers = () => {
     }),
     onSubmit: async (values) => {
       if (editId) {
-        await api.put(`/receiver/${editId}`, values);
+        await api.put(`/api/receiver/${editId}`, values);
         setSnackbar({ open: true, message: 'Receiver updated', severity: 'success' });
       } else {
-        await api.post('/receiver', values);
+        await api.post('/api/receiver', values);
         setSnackbar({ open: true, message: 'Receiver added', severity: 'success' });
       }
       fetchReceivers(search);

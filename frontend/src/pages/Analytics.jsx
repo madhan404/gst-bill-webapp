@@ -12,8 +12,8 @@ const Analytics = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       setLoading(true);
-      const res1 = await api.get('/analytics/summary');
-      const res2 = await api.get('/analytics/monthly');
+      const res1 = await api.get('/api/analytics/summary');
+      const res2 = await api.get('/api/analytics/monthly');
       setSummary(res1.data);
       setMonthly(Object.entries(res2.data).map(([month, data]) => ({ month, ...data })));
       setLoading(false);
