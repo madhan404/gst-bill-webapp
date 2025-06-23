@@ -16,13 +16,15 @@ const billSchema = new mongoose.Schema({
     }
   ],
   tax: {
-    cgst: Number,
-    sgst: Number,
-    igst: Number,
-    roundOff: Number,
-    totalBeforeTax: Number,
-    totalAfterTax: Number,
-    totalInWords: String,
+    cgst: { type: Number, default: 0 },
+    sgst: { type: Number, default: 0 },
+    igst: { type: Number, default: 0 },
+    roundOff: { type: Number, default: 0 },
+    totalBeforeTax: { type: Number, default: 0 },
+    totalAfterTax: { type: Number, default: 0 },
+    totalInWords: { type: String, default: '' },
+    cgstRate: { type: Number, default: 2.5 },
+    sgstRate: { type: Number, default: 2.5 }
   },
   qrCode: { type: String },
   pdfUrl: { type: String },

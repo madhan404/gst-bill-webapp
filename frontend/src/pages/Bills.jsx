@@ -21,7 +21,7 @@ const initialForm = {
   date: '',
   receiver: '',
   products: [initialProduct],
-  tax: { cgst: 0, sgst: 0, igst: 0, roundOff: 0, totalBeforeTax: 0, totalAfterTax: 0, totalInWords: '' },
+  tax: { cgst: 0, sgst: 0, igst: 0, roundOff: 0, totalBeforeTax: 0, totalAfterTax: 0, totalInWords: '', cgstRate: 2.5, sgstRate: 2.5 },
 };
 
 const backendBase = 'http://localhost:3000';
@@ -83,7 +83,7 @@ const Bills = () => {
         total: bill.tax?.totalAfterTax
       });
       setQrValue(qrData);
-      recalcTax(bill.products);
+      recalcTax(bill.products, bill.tax);
     } else {
       setEditId(null);
       formik.resetForm();
@@ -114,7 +114,7 @@ const Bills = () => {
     });
 
     formik.setFieldValue('products', newProducts);
-    recalcTax(newProducts);
+    recalcTax(newProducts, formik.values.tax);
   };
 
   const handleAddProduct = () => {
@@ -123,19 +123,22 @@ const Bills = () => {
   const handleRemoveProduct = (idx) => {
     const products = formik.values.products.filter((_, i) => i !== idx);
     formik.setFieldValue('products', products);
-    recalcTax(products);
+    recalcTax(products, formik.values.tax);
   };
 
-  const recalcTax = (products) => {
+  const recalcTax = (products, rates) => {
     const totalBeforeTax = products.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
-    const cgst = totalBeforeTax * 0.025;
-    const sgst = totalBeforeTax * 0.025;
+    const cgstRate = Number(rates.cgstRate) / 100 || 0;
+    const sgstRate = Number(rates.sgstRate) / 100 || 0;
+    
+    const cgst = totalBeforeTax * cgstRate;
+    const sgst = totalBeforeTax * sgstRate;
     const igst = 0;
     const totalWithTax = totalBeforeTax + cgst + sgst;
     const roundOff = Math.round(totalWithTax) - totalWithTax;
     const totalAfterTax = Math.round(totalWithTax);
     const totalInWords = numToWords(totalAfterTax);
-    formik.setFieldValue('tax', { cgst, sgst, igst, roundOff, totalBeforeTax, totalAfterTax, totalInWords });
+    formik.setFieldValue('tax', { ...rates, cgst, sgst, igst, roundOff, totalBeforeTax, totalAfterTax, totalInWords });
   };
 
   function numToWords(num) {
@@ -378,14 +381,37 @@ const Bills = () => {
               </Grid>
             ))}
             <Button onClick={handleAddProduct} sx={{ mt: 1 }}>Add Product</Button>
-            <Box mt={2}>
-              <Typography>CGST: {formik.values.tax.cgst.toFixed(2)}</Typography>
-              <Typography>SGST: {formik.values.tax.sgst.toFixed(2)}</Typography>
-              <Typography>IGST: {formik.values.tax.igst.toFixed(2)}</Typography>
-              <Typography>Round Off: {formik.values.tax.roundOff.toFixed(2)}</Typography>
-              <Typography>Total Before Tax: {formik.values.tax.totalBeforeTax.toFixed(2)}</Typography>
-              <Typography>Total After Tax: {formik.values.tax.totalAfterTax.toFixed(2)}</Typography>
-              <Typography>Total in Words: {formik.values.tax.totalInWords}</Typography>
+            <Box mt={2} sx={{ border: '1px solid #ddd', p: 2, borderRadius: 1 }}>
+              <Typography variant="h6" mb={1}>Tax Calculation</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={6} sm={3}>
+                  <TextField
+                    fullWidth
+                    label="CGST Rate (%)"
+                    name="tax.cgstRate"
+                    type="number"
+                    value={formik.values.tax.cgstRate}
+                    onChange={formik.handleChange}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <TextField
+                    fullWidth
+                    label="SGST Rate (%)"
+                    name="tax.sgstRate"
+                    type="number"
+                    value={formik.values.tax.sgstRate}
+                    onChange={formik.handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography>CGST: {formik.values.tax.cgst.toFixed(2)}</Typography>
+                  <Typography>SGST: {formik.values.tax.sgst.toFixed(2)}</Typography>
+                  <Typography>Total Before Tax: {formik.values.tax.totalBeforeTax.toFixed(2)}</Typography>
+                  <Typography variant="h6">Total After Tax: {formik.values.tax.totalAfterTax.toFixed(2)}</Typography>
+                </Grid>
+              </Grid>
+              <Typography sx={{mt:1}}>Total in Words: {formik.values.tax.totalInWords}</Typography>
             </Box>
             {qrValue && (
               <Box mt={2} textAlign="center">

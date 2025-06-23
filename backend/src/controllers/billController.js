@@ -189,9 +189,9 @@ async function generateBillPDF(bill) {
     doc.fontSize(10).font('Helvetica-Bold').fillColor(textColor);
     doc.text('Total Amount Before Tax:', leftColX, totalsLineY).font('Helvetica').text(bill.totalBeforeTax.toFixed(2), leftColX + 150, totalsLineY, { align: 'right', width: 60 });
     totalsLineY += 16;
-    doc.font('Helvetica-Bold').text('CGST (2.5%):', leftColX, totalsLineY).font('Helvetica').text(bill.tax.cgst.toFixed(2), leftColX + 150, totalsLineY, { align: 'right', width: 60 });
+    doc.font('Helvetica-Bold').text(`CGST (${bill.tax.cgstRate || 2.5}%):`, leftColX, totalsLineY).font('Helvetica').text(bill.tax.cgst.toFixed(2), leftColX + 150, totalsLineY, { align: 'right', width: 60 });
     totalsLineY += 16;
-    doc.font('Helvetica-Bold').text('SGST (2.5%):', leftColX, totalsLineY).font('Helvetica').text(bill.tax.sgst.toFixed(2), leftColX + 150, totalsLineY, { align: 'right', width: 60 });
+    doc.font('Helvetica-Bold').text(`SGST (${bill.tax.sgstRate || 2.5}%):`, leftColX, totalsLineY).font('Helvetica').text(bill.tax.sgst.toFixed(2), leftColX + 150, totalsLineY, { align: 'right', width: 60 });
     
     totalsLineY = totalsY + 12;
     doc.font('Helvetica-Bold').text('IGST:', rightColX, totalsLineY).font('Helvetica').text(bill.tax.igst.toFixed(2), rightColX + 150, totalsLineY, { align: 'right', width: 60 });
@@ -265,10 +265,13 @@ exports.createBill = async (req, res) => {
 
     bill.totalBeforeTax = totalBeforeTax;
     
-    // Calculate taxes
-    const taxRate = 0.025; // 2.5% each for CGST and SGST
-    bill.tax.cgst = totalBeforeTax * taxRate;
-    bill.tax.sgst = totalBeforeTax * taxRate;
+    // Calculate taxes using rates from request or default
+    const cgstRate = (req.body.tax?.cgstRate || 2.5) / 100;
+    const sgstRate = (req.body.tax?.sgstRate || 2.5) / 100;
+    bill.tax.cgst = totalBeforeTax * cgstRate;
+    bill.tax.sgst = totalBeforeTax * sgstRate;
+    bill.tax.cgstRate = req.body.tax?.cgstRate || 2.5;
+    bill.tax.sgstRate = req.body.tax?.sgstRate || 2.5;
     
     // Calculate total after tax
     const totalWithTaxes = totalBeforeTax + bill.tax.cgst + bill.tax.sgst;
@@ -306,9 +309,10 @@ exports.updateBill = async (req, res) => {
 
     billData.totalBeforeTax = totalBeforeTax;
     
-    const taxRate = 0.025; // 2.5%
-    billData.tax.cgst = totalBeforeTax * taxRate;
-    billData.tax.sgst = totalBeforeTax * taxRate;
+    const cgstRate = (billData.tax?.cgstRate || 2.5) / 100;
+    const sgstRate = (billData.tax?.sgstRate || 2.5) / 100;
+    billData.tax.cgst = totalBeforeTax * cgstRate;
+    billData.tax.sgst = totalBeforeTax * sgstRate;
     
     const totalWithTaxes = totalBeforeTax + billData.tax.cgst + billData.tax.sgst;
     const roundedTotal = Math.round(totalWithTaxes);
