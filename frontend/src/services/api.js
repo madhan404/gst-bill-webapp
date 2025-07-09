@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://gst-bill-backend-7sp5.onrender.com',
+  baseURL: import.meta.env.VITE_API_URL, // Local API URL from .env
+  // baseURL: 'https://gst-bill-backend-7sp5.onrender.com', // Deployed backend (commented for local)
 });
 
 api.interceptors.request.use((config) => {

@@ -24,7 +24,8 @@ const initialForm = {
   tax: { cgst: 0, sgst: 0, igst: 0, roundOff: 0, totalBeforeTax: 0, totalAfterTax: 0, totalInWords: '', cgstRate: 2.5, sgstRate: 2.5 },
 };
 
-const backendBase = 'https://gst-bill-backend-7sp5.onrender.com';
+// const backendBase = 'https://gst-bill-backend-7sp5.onrender.com'; // Deployed backend (commented for local)
+const backendBase = import.meta.env.VITE_API_URL; // Local API URL
 
 const Bills = () => {
   const [bills, setBills] = useState([]);
@@ -94,7 +95,7 @@ const Bills = () => {
   const handleClose = () => setOpen(false);
 
   const handleDelete = async (id) => {
-    await api.delete(`/bill/${id}`);
+    await api.delete(`/api/bill/${id}`);
     setSnackbar({ open: true, message: 'Bill deleted', severity: 'success' });
     fetchBills();
   };
@@ -182,10 +183,10 @@ const Bills = () => {
       });
       const data = { ...values, qrCode: qrData, pdfUrl: '', company: companyId };
       if (editId) {
-        await api.put(`/bill/${editId}`, data);
+        await api.put(`/api/bill/${editId}`, data);
         setSnackbar({ open: true, message: 'Bill updated', severity: 'success' });
       } else {
-        await api.post('/bill', data);
+        await api.post('/api/bill', data);
         setSnackbar({ open: true, message: 'Bill added', severity: 'success' });
       }
       await fetchBills(); // Always refetch to get populated receiver/company

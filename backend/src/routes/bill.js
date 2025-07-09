@@ -9,4 +9,4 @@ router.post('/', auth, billController.createBill);
 router.put('/:id', auth, billController.updateBill);
 router.delete('/:id', auth, billController.deleteBill);
 
-module.exports = router; 
+module.exports = router;    

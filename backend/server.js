@@ -16,11 +16,14 @@ dotenv.config();
 const app = express();
 app.use(cors({
   origin: (origin, callback) => {
-    if (
-      !origin ||
-      origin === 'http://localhost:5173' ||
-      /^https:\/\/[a-z0-9-]+--mellow-moxie-829df5\.netlify\.app$/.test(origin)
-    ) {
+    // Allow only localhost for local development
+    const allowedOrigins = [
+      'http://localhost:5173',
+      // 'https://mellow-moxie-829df5.netlify.app', // Deployed frontend (commented for local)
+    ];
+    // const netlifyPreviewRegex = /^https:\/\/[a-z0-9-]+--mellow-moxie-829df5\.netlify\.app$/; // Commented for local
+
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -28,6 +31,26 @@ app.use(cors({
   },
   credentials: true,
 }));
+
+
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     const allowedOrigins = [
+//       'http://localhost:5173'||
+//       'https://mellow-moxie-829df5.netlify.app'
+//     ];
+
+//     const netlifyPreviewRegex = /^https:\/\/[a-z0-9-]+--mellow-moxie-829df5\.netlify\.app$/;
+
+//     if (!origin || allowedOrigins.includes(origin) || netlifyPreviewRegex.test(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true,
+// }));
+
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
