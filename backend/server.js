@@ -19,9 +19,9 @@ app.use(cors({
     // Allow only localhost for local development
     const allowedOrigins = [
       'http://localhost:5173',
-      // 'https://mellow-moxie-829df5.netlify.app', // Deployed frontend (commented for local)
+       'https://mellow-moxie-829df5.netlify.app', // Deployed frontend (commented for local)
     ];
-    // const netlifyPreviewRegex = /^https:\/\/[a-z0-9-]+--mellow-moxie-829df5\.netlify\.app$/; // Commented for local
+   const netlifyPreviewRegex = /^https:\/\/[a-z0-9-]+--mellow-moxie-829df5\.netlify\.app$/; // Commented for local
 
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
